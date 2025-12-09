@@ -45,3 +45,4 @@ protoc-bin-vendored = "3.2"
 loco-rs = { workspace = true, features = ["testing"] }
 serial_test = "3.1.1"
 rstest = "0.25"
+insta = "1.34"

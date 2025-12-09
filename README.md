@@ -96,9 +96,23 @@ You can integrate a `generate protobuf` command into your Loco CLI.
 
 2.  Run the generator:
     ```bash
-    cargo loco generate protobuf user
-    # Creates proto/user.proto
+    cargo loco generate protobuf user name:string age:int
+    # Creates proto/user.proto with message User { string name = 1; int32 age = 2; }
     ```
+
+    **Supported Types:**
+    *   `int`, `integer`, `int32`, `int4`, `small_int`, `tiny_integer`, `small_integer` -> `int32`
+    *   `bigint`, `int64`, `int8`, `big_int`, `big_integer` -> `int64`
+    *   `unsigned`, `small_unsigned` -> `uint32`
+    *   `big_unsigned` -> `uint64`
+    *   `float` -> `float`
+    *   `double`, `decimal`, `decimal_len`, `money` -> `double`
+    *   `bool`, `boolean` -> `bool`
+    *   `string`, `text`, `uuid`, `json`, `jsonb`, `array` -> `string`
+    *   `date`, `date_time`, `tstz`, `timestamp` -> `int64` (Unix timestamp)
+    *   `blob`, `binary_len`, `var_binary` -> `bytes`
+    
+    Modifiers like `!` (required) and `^` (unique) are stripped and ignored for Protobuf generation (e.g. `string!` becomes `string`).
 
 ## Testing
 

@@ -1,10 +1,29 @@
+[package]
+name = "loco-protobuf"
+version = "0.1.0"
+edition = "2021"
+
 [workspace]
 members = [
-    "crates/loco-protobuf",
     "examples/demo-app",
     "examples/real-app"
 ]
 resolver = "2"
+
+[dependencies]
+axum = { workspace = true }
+bytes = "1"
+prost = "0.13"
+serde = { version = "1", features = ["derive"] }
+thiserror = "1"
+http-body-util = "0.1"
+tracing = "0.1"
+
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+axum-test = "14"
+tempfile = "3"
 
 [workspace.dependencies]
 loco-rs = "0.16"
@@ -15,4 +34,4 @@ serde_json = "1"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 prost = "0.13"
-loco-protobuf = { path = "crates/loco-protobuf" }
+loco-protobuf = { path = "." }
