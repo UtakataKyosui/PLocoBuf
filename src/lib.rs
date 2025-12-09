@@ -95,7 +95,7 @@ impl std::error::Error for ProtobufError {
 /// A wrapper for Protobuf messages that implements Axum's [`FromRequest`] and [`IntoResponse`].
 ///
 /// Use this tuple struct to extract a Protobuf message from a request body or return one in a response.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Default)]
 pub struct Protobuf<T>(pub T);
 
 impl<S, T> FromRequest<S> for Protobuf<T>
