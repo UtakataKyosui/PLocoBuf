@@ -95,8 +95,14 @@ impl std::error::Error for ProtobufError {
 /// A wrapper for Protobuf messages that implements Axum's [`FromRequest`] and [`IntoResponse`].
 ///
 /// Use this tuple struct to extract a Protobuf message from a request body or return one in a response.
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct Protobuf<T>(pub T);
+
+impl<T: std::fmt::Debug> std::fmt::Debug for Protobuf<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Protobuf").field(&self.0).finish()
+    }
+}
 
 impl<S, T> FromRequest<S> for Protobuf<T>
 where

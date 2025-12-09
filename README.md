@@ -46,7 +46,25 @@ prost-build = "0.13"
 
 ## Usage
 
-In your Loco controller:
+First, define your Protocol Buffer schema:
+
+**`proto/user.proto`**
+```proto
+syntax = "proto3";
+
+package user;
+
+message UserRequest {
+  string id = 1;
+}
+
+message UserResponse {
+  string id = 1;
+  string name = 2;
+}
+```
+
+Then, in your Loco controller:
 
 ```rust
 use loco_rs::prelude::*;
@@ -56,7 +74,7 @@ use crate::user::{UserRequest, UserResponse};
 async fn create_user(
     Protobuf(req): Protobuf<UserRequest>,
 ) -> Result<Protobuf<UserResponse>> {
-    println!("Received: {:?}", req);
+    info!(id = %req.id, "received user request");
     
     let res = UserResponse {
         id: req.id,
