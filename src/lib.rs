@@ -110,12 +110,7 @@ where
             .headers()
             .get_all(header::CONTENT_TYPE)
             .iter()
-            .any(|value| {
-                value
-                    .to_str()
-                    .map(|s| s.starts_with("application/protobuf"))
-                    .unwrap_or(false)
-            });
+            .any(|value| value.as_bytes().starts_with(b"application/protobuf"));
 
         if has_protobuf {
             let bytes = Bytes::from_request(req, state)
