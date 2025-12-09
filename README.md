@@ -73,6 +73,27 @@ pub fn routes() -> Routes {
 ```
 
 
+
 ## Testing
 
 You can use `reqwest` or any HTTP client to test. Set `Content-Type: application/protobuf` and send the binary payload.
+
+## Development
+
+### Fetching PR Review Comments
+
+For contributors working on pull requests, a helper script is available to fetch and display review comments:
+
+```bash
+# Fetch comments for the first open PR
+./scripts/get-pr-review-comments.sh
+
+# Fetch comments for a specific PR number
+./scripts/get-pr-review-comments.sh 1
+```
+
+This script displays:
+- PR information (title, author, state)
+- Review summaries
+- General comments
+- Code-specific review comments with file and line information
