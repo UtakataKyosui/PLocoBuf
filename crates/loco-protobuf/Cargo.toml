@@ -1,0 +1,17 @@
+[package]
+name = "loco-protobuf"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = { workspace = true }
+bytes = "1"
+prost = "0.13"
+serde = { version = "1", features = ["derive"] }
+thiserror = "1"
+http-body-util = "0.1"
+tracing = "0.1"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+axum-test = "14"
