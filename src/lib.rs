@@ -116,7 +116,11 @@ where
             .headers()
             .get_all(header::CONTENT_TYPE)
             .iter()
-            .any(|value| value.as_bytes().starts_with(b"application/protobuf"));
+            .filter_map(|value| value.to_str().ok())
+            .filter_map(|value| value.parse::<mime::Mime>().ok())
+            .any(|mime| {
+                mime.type_() == "application" && mime.subtype() == "protobuf"
+            });
 
         if has_protobuf {
             let bytes = Bytes::from_request(req, state)
