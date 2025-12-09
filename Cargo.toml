@@ -14,11 +14,7 @@ resolver = "2"
 axum = { workspace = true }
 bytes = "1"
 prost = "0.13"
-serde = { version = "1", features = ["derive"] }
-thiserror = "1"
-http-body-util = "0.1"
-tracing = "0.1"
-async-trait = "0.1.89"
+
 
 
 [dev-dependencies]

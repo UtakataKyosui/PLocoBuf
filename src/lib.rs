@@ -38,47 +38,56 @@
 //! ```
 
 // pub mod gen;
-use async_trait::async_trait;
 use axum::{
     body::Bytes,
-    extract::{FromRequest, Request},
+    extract::{FromRequest, Request, rejection::BytesRejection},
     http::{header, StatusCode},
     response::{IntoResponse, Response},
 };
 use prost::Message;
-use serde::{Deserialize, Serialize};
-use thiserror::Error;
 
 /// Error type for ProtoBuf extractions and responses.
-#[derive(Debug, Error)]
+#[derive(Debug)]
 pub enum ProtobufError {
-    #[error("Invalid Content-Type, expected application/protobuf")]
     InvalidContentType,
-
-    #[error("Failed to read body")]
-    ReadBody(#[source] axum::Error),
-
-    #[error("Failed to decode Protobuf")]
-    Decode(#[from] prost::DecodeError),
-
-    #[error("Failed to encode Protobuf")]
-    Encode(#[from] prost::EncodeError),
+    ReadBody(BytesRejection),
+    Decode(prost::DecodeError),
 }
 
 impl IntoResponse for ProtobufError {
     fn into_response(self) -> Response {
         match self {
-            ProtobufError::InvalidContentType => {
-                (axum::http::StatusCode::UNSUPPORTED_MEDIA_TYPE, self.to_string()).into_response()
-            }
-            ProtobufError::Decode(err) => {
-                (axum::http::StatusCode::BAD_REQUEST, err.to_string()).into_response()
-            }
-            _ => (
-                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-                self.to_string(),
+            ProtobufError::InvalidContentType => (
+                StatusCode::UNSUPPORTED_MEDIA_TYPE,
+                "Invalid Content-Type, expected application/protobuf",
             )
                 .into_response(),
+            ProtobufError::ReadBody(rejection) => rejection.into_response(),
+            ProtobufError::Decode(err) => (
+                StatusCode::BAD_REQUEST,
+                format!("Failed to decode Protobuf: {}", err),
+            )
+                .into_response(),
+        }
+    }
+}
+
+impl std::fmt::Display for ProtobufError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ProtobufError::InvalidContentType => write!(f, "Invalid Content-Type, expected application/protobuf"),
+            ProtobufError::ReadBody(err) => write!(f, "Failed to read body: {}", err),
+            ProtobufError::Decode(err) => write!(f, "Failed to decode Protobuf: {}", err),
+        }
+    }
+}
+
+impl std::error::Error for ProtobufError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            ProtobufError::ReadBody(err) => Some(err),
+            ProtobufError::Decode(err) => Some(err),
+            _ => None,
         }
     }
 }
@@ -86,9 +95,8 @@ impl IntoResponse for ProtobufError {
 /// A wrapper for Protobuf messages that implements Axum's [`FromRequest`] and [`IntoResponse`].
 ///
 /// Use this tuple struct to extract a Protobuf message from a request body or return one in a response.
-#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default)]
 pub struct Protobuf<T>(pub T);
-
 
 impl<S, T> FromRequest<S> for Protobuf<T>
 where
@@ -112,8 +120,8 @@ where
         if has_protobuf {
             let bytes = Bytes::from_request(req, state)
                 .await
-                .map_err(|e| ProtobufError::ReadBody(axum::Error::new(e)))?;
-            let value = T::decode(bytes)?;
+                .map_err(ProtobufError::ReadBody)?;
+            let value = T::decode(bytes).map_err(ProtobufError::Decode)?;
             Ok(Protobuf(value))
         } else {
             Err(ProtobufError::InvalidContentType)
@@ -127,18 +135,17 @@ where
 {
     fn into_response(self) -> Response {
         let mut buf = Vec::new();
-        if let Err(e) = self.0.encode(&mut buf) {
-            return (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                format!("Failed to encode protobuf: {}", e),
+        match self.0.encode(&mut buf) {
+            Ok(_) => (
+                [(header::CONTENT_TYPE, "application/protobuf")],
+                buf,
             )
-                .into_response();
+                .into_response(),
+            Err(err) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to encode protobuf: {}", err),
+            )
+                .into_response(),
         }
-
-        (
-            [(header::CONTENT_TYPE, "application/protobuf")],
-            buf,
-        )
-            .into_response()
     }
 }

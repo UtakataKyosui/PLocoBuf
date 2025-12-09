@@ -49,7 +49,7 @@ prost-build = "0.13"
 In your Loco controller:
 
 ```rust
-use loco_rw::prelude::*;
+use loco_rs::prelude::*;
 use loco_protobuf::Protobuf;
 use crate::user::{UserRequest, UserResponse};
 
