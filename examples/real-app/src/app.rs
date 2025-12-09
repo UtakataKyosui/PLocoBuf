@@ -25,6 +25,8 @@ impl Hooks for App {
         env!("CARGO_CRATE_NAME")
     }
 
+// Reverted register_commands check
+
     fn app_version() -> String {
         format!(
             "{} ({})",

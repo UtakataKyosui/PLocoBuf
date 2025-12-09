@@ -1,5 +1,6 @@
 pub mod app;
 pub mod proto;
+pub use loco_protobuf;
 pub mod controllers;
 pub mod data;
 pub mod initializers;

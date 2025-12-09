@@ -72,6 +72,34 @@ pub fn routes() -> Routes {
 }
 ```
 
+## CLI Generator (Optional)
+
+You can integrate a `generate protobuf` command into your Loco CLI.
+
+1.  In `src/bin/main.rs`, wrap the execution:
+
+    ```rust
+    // src/bin/main.rs
+    use my_app::app::App;
+    use my_app::loco_protobuf; // Ensure this re-export exists in lib.rs
+
+    #[tokio::main]
+    async fn main() -> loco_rs::Result<()> {
+        // Intercept generate protobuf command
+        if let Ok(true) = loco_protobuf::gen::handle() {
+            return Ok(());
+        }
+        
+        loco_rs::cli::main::<App, migration::Migrator>().await
+    }
+    ```
+
+2.  Run the generator:
+    ```bash
+    cargo loco generate protobuf user
+    # Creates proto/user.proto
+    ```
+
 ## Testing
 
 You can use `reqwest` or any HTTP client to test. Set `Content-Type: application/protobuf` and send the binary payload.

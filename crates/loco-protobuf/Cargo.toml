@@ -11,6 +11,7 @@ serde = { version = "1", features = ["derive"] }
 thiserror = "1"
 http-body-util = "0.1"
 tracing = "0.1"
+clap = { version = "4", features = ["derive"] }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["full"] }
