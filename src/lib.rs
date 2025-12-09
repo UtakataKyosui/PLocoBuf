@@ -129,7 +129,7 @@ where
     T: Message,
 {
     fn into_response(self) -> Response {
-        let mut buf = Vec::new();
+        let mut buf = Vec::with_capacity(self.0.encoded_len());
         match self.0.encode(&mut buf) {
             Ok(_) => (
                 [(header::CONTENT_TYPE, "application/protobuf")],
