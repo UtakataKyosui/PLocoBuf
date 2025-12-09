@@ -18,12 +18,14 @@ serde = { version = "1", features = ["derive"] }
 thiserror = "1"
 http-body-util = "0.1"
 tracing = "0.1"
+async-trait = "0.1.89"
 
 
 [dev-dependencies]
 tokio = { version = "1", features = ["full"] }
 axum-test = "14"
 tempfile = "3"
+prost = { version = "0.13", features = ["derive"] }
 
 [workspace.dependencies]
 loco-rs = "0.16"
