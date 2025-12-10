@@ -383,10 +383,12 @@ fn capitalize(s: &str) -> String {
 fn pluralize(s: &str) -> String {
     if s.ends_with('y') && !s.ends_with("ay") && !s.ends_with("ey") && !s.ends_with("iy") && !s.ends_with("oy") && !s.ends_with("uy") {
         format!("{}ies", &s[..s.len()-1])
-    } else if s.ends_with("ss") || s.ends_with("sh") || s.ends_with("ch") || s.ends_with('x') || s.ends_with('z') {
+    } else if s.ends_with("ss") || s.ends_with("us") || s.ends_with("sh") || s.ends_with("ch") || s.ends_with('x') || s.ends_with('z') {
+        // status -> statuses, class -> classes, box -> boxes
         format!("{}es", s)
     } else if s.ends_with('s') {
-        // Words already ending in 's' (but not 'ss') - just return as is
+        // Words already ending in 's' (but not 'ss' or 'us') - just return as is
+        // e.g., products, users (already plural)
         s.to_string()
     } else {
         format!("{}s", s)
