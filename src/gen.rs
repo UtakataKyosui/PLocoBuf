@@ -53,7 +53,7 @@ where
                      generate_protobuf(name, fields)?;
                      return Ok(true);
                 } else {
-                     println!("Usage: generate protobuf <NAME> [FIELDS...]");
+                     eprintln!("Usage: generate protobuf <NAME> [FIELDS...]");
                      return Ok(true);
                 }
             }
@@ -62,7 +62,7 @@ where
                      generate_migration_from_proto(proto_name)?;
                      return Ok(true);
                  } else {
-                     println!("Usage: generate migration_from_proto <PROTO_NAME>");
+                     eprintln!("Usage: generate migration_from_proto <PROTO_NAME>");
                      return Ok(true);
                  }
             }
@@ -71,7 +71,7 @@ where
                     generate_proto_model(name, fields)?;
                     return Ok(true);
                 } else {
-                    println!("Usage: generate proto_model <NAME> [FIELDS...]");
+                    eprintln!("Usage: generate proto_model <NAME> [FIELDS...]");
                     return Ok(true);
                 }
             }
@@ -80,7 +80,7 @@ where
                     generate_proto_controller(name)?;
                     return Ok(true);
                 } else {
-                    println!("Usage: generate proto_controller <NAME>");
+                    eprintln!("Usage: generate proto_controller <NAME>");
                     return Ok(true);
                 }
             }
@@ -89,7 +89,7 @@ where
                     generate_proto_scaffold(name, fields)?;
                     return Ok(true);
                 } else {
-                    println!("Usage: generate proto_scaffold <NAME> [FIELDS...]");
+                    eprintln!("Usage: generate proto_scaffold <NAME> [FIELDS...]");
                     return Ok(true);
                 }
             }

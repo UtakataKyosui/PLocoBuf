@@ -14,7 +14,6 @@ axum = { workspace = true }
 bytes = "1"
 prost = "0.13"
 mime = "0.3"
-tower = "0.5"
 
 
 
