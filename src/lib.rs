@@ -37,7 +37,7 @@
 //! }
 //! ```
 
-// pub mod gen;
+pub mod gen;
 use axum::{
     body::Bytes,
     extract::{FromRequest, Request, rejection::BytesRejection},

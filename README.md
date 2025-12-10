@@ -92,6 +92,64 @@ pub fn routes() -> Routes {
 
 
 
+3.  **Generate Migration from Proto**:
+    
+    If you have an existing `.proto` file (e.g., `proto/user.proto`), you can automatically generate a Loco DB migration for it:
+    
+    ```bash
+    cargo loco generate migration_from_proto user
+    ```
+    
+    This reads `proto/user.proto`, parses the fields, maps types (e.g., `int64` -> `bigint`), and invokes `cargo loco generate migration` for you.
+
+---
+
+## Generator Commands
+
+`loco-protobuf` provides CLI commands to quickly scaffold ProtoBuf-based APIs.
+
+### 1. `generate proto_model`
+
+Generate `.proto` file, database migration, and auto-migrate:
+
+```bash
+cargo loco generate proto_model product name:string! price:double stock:int
+```
+
+**Output**: `proto/product.proto`, migration file, database table created
+
+### 2. `generate proto_controller`
+
+Generate controller with ProtoBuf handlers:
+
+```bash
+cargo loco generate proto_controller products
+```
+
+**Output**: `src/controllers/products.rs` with CRUD endpoints
+
+### 3. `generate proto_scaffold`
+
+Full CRUD scaffold (combines above):
+
+```bash
+cargo loco generate proto_scaffold post title:string! content:text
+```
+
+**Integration**: Add to `src/bin/main.rs`:
+```rust
+#[tokio::main]
+async fn main() -> loco_rs::Result<()> {
+    // Intercept generator commands
+    if loco_protobuf::gen::handle()? {
+        return Ok(());
+    }
+    cli::main::<App, Migrator>().await
+}
+```
+
+---
+
 ## Testing
 
 You can use `reqwest` or any HTTP client to test. Set `Content-Type: application/protobuf` and send the binary payload.
