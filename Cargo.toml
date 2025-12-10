@@ -5,7 +5,6 @@ edition = "2021"
 
 [workspace]
 members = [
-    "examples/demo-app",
     "examples/real-app"
 ]
 resolver = "2"
