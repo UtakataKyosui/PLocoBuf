@@ -14,9 +14,7 @@ axum = { workspace = true }
 bytes = "1"
 prost = "0.13"
 mime = "0.3"
-rrgen = "0.5"
-tera = "1.20"
-serde_json = "1"
+tower = "0.5"
 
 
 

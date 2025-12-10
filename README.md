@@ -120,13 +120,17 @@ cargo loco generate proto_model product name:string! price:double stock:int
 
 ### 2. `generate proto_controller`
 
-Generate controller with ProtoBuf handlers:
+Generates a controller file with CRUD endpoints.
 
 ```bash
 cargo loco generate proto_controller products
 ```
 
-**Output**: `src/controllers/products.rs` with CRUD endpoints
+**Generates**:
+- `src/controllers/products.rs` - Controller with create/get endpoints
+- Uses the single message type from `.proto` file (e.g., `Product`)
+
+**Note**: The generated controller expects a single message type (e.g., `Product`). If you need separate Request/Response types, you'll need to manually define them in your `.proto` file and update the controller accordingly.
 
 ### 3. `generate proto_scaffold`
 

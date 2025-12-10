@@ -188,22 +188,22 @@ fn generate_proto_controller(name: &str) -> Result<()> {
 use axum::response::Result;
 use loco_protobuf::Protobuf;
 use loco_rs::prelude::*;
-use crate::proto::{}::{{{}Request, {}Response}};
+use crate::proto::{}::{{{}}}; 
 
 pub async fn create(
     State(ctx): State<AppContext>,
-    Protobuf(req): Protobuf<{}Request>,
-) -> Result<Protobuf<{}Response>> {{
+    Protobuf(req): Protobuf<{}>,
+) -> Result<Protobuf<{}>> {{
     // TODO: Implement create logic
-    Ok(Protobuf({}Response::default()))
+    Ok(Protobuf({}::default()))
 }}
 
 pub async fn get(
     Path(id): Path<String>,
     State(ctx): State<AppContext>,
-) -> Result<Protobuf<{}Response>> {{
+) -> Result<Protobuf<{}>> {{
     // TODO: Implement get logic
-    Ok(Protobuf({}Response::default()))
+    Ok(Protobuf({}::default()))
 }}
 
 pub fn routes() -> Routes {{
@@ -212,7 +212,7 @@ pub fn routes() -> Routes {{
         .add("/", post(create))
         .add("/:id", get(get))
 }}
-"#, snake_name, pascal_name, pascal_name, pascal_name, pascal_name, pascal_name, pascal_name, pascal_name, pluralize(&snake_name));
+"#, snake_name, pascal_name, pascal_name, pascal_name, pascal_name, pascal_name, pascal_name, pluralize(&snake_name));
     
     // Write controller file
     let controller_dir = project_root.join("src").join("controllers");
